@@ -1,7 +1,11 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import path from 'path'
+
 import { Users } from './models/user'
+
+import { newsRouter } from './routes/news'
+import { restrictedRouter } from './routes/restricted'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -12,7 +16,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
-app.get('/', (req, res) => res.render('index'))
+app.use('/noticias', newsRouter)
+app.use('/restrito', restrictedRouter)
 
 mongoose
   .connect(mongo)
