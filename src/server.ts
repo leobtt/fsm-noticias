@@ -3,6 +3,12 @@ import mongoose from 'mongoose'
 import path from 'path'
 import session from 'express-session'
 
+declare module 'express-session' {
+  export interface SessionData {
+    user: { [key: string]: any }
+  }
+}
+
 import { Users } from './models/user'
 
 import { router } from './routes'
@@ -13,10 +19,10 @@ const app = express()
 const port = process.env.PORT || 3000
 const mongo = process.env.MONGO || 'mongodb://docker:docker@localhost:27017/?authMechanism=DEFAULT&authSource=admin'
 
-
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
+app.use(express.urlencoded({ extended: true }))
 
 app.use(session({
   secret: 'fsm-noticias'
