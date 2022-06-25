@@ -1,6 +1,7 @@
-import express from 'express'
+import express, { application } from 'express'
 import mongoose from 'mongoose'
 import path from 'path'
+import session from 'express-session'
 
 import { Users } from './models/user'
 
@@ -16,8 +17,20 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
+app.use(session({
+  secret: 'fsm-noticias'
+}))
+
 app.use('/noticias', newsRouter)
 app.use('/restrito', restrictedRouter)
+
+app.use('/restrito', (req, res, next) => {
+  if ('user' in req.session) {
+    return next()
+  }
+  return res.send('precisa logar')
+})
+
 
 mongoose
   .connect(mongo)
