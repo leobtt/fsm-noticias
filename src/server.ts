@@ -5,6 +5,7 @@ import session from 'express-session'
 
 import { Users } from './models/user'
 
+import { router } from './routes'
 import { newsRouter } from './routes/news'
 import { restrictedRouter } from './routes/restricted'
 
@@ -21,6 +22,7 @@ app.use(session({
   secret: 'fsm-noticias'
 }))
 
+app.use('/', router)
 app.use('/noticias', newsRouter)
 app.use('/restrito', restrictedRouter)
 
@@ -28,7 +30,7 @@ app.use('/restrito', (req, res, next) => {
   if ('user' in req.session) {
     return next()
   }
-  return res.send('precisa logar')
+  return res.redirect('/login')
 })
 
 
