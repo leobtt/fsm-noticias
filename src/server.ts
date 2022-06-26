@@ -32,6 +32,14 @@ app.use('/', router)
 app.use('/noticias', newsRouter)
 app.use('/restrito', restrictedRouter)
 
+
+app.use('/', (req, res, next) => {
+  if ('user' in req.session) {
+    res.locals.user = req.session.user
+  }
+  return next()
+})
+
 app.use('/restrito', (req, res, next) => {
   if ('user' in req.session) {
     return next()
